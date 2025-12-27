@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - GearGuard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Equipment</h6>
+                        <h2 class="card-title mb-0">{{ equipment_count }}</h2>
+                    </div>
+                    <i class="bi bi-gear" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Maintenance Requests</h6>
+                        <h2 class="card-title mb-0">{{ requests_count }}</h2>
+                    </div>
+                    <i class="bi bi-tools" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Teams</h6>
+                        <h2 class="card-title mb-0">{{ teams_count }}</h2>
+                    </div>
+                    <i class="bi bi-people" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="card-subtitle mb-2">Overdue</h6>
+                        <h2 class="card-title mb-0">{{ overdue_count }}</h2>
+                    </div>
+                    <i class="bi bi-exclamation-triangle" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="/equipment" class="btn btn-primary w-100">
+                            <i class="bi bi-plus-circle"></i> Add Equipment
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/kanban" class="btn btn-info w-100">
+                            <i class="bi bi-plus-circle"></i> Create Request
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/calendar" class="btn btn-success w-100">
+                            <i class="bi bi-calendar-check"></i> View Calendar
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="/kanban" class="btn btn-warning w-100">
+                            <i class="bi bi-kanban"></i> Kanban Board
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

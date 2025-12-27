@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Kanban Board - GearGuard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .kanban-column {
+        min-height: 500px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    .kanban-card {
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        cursor: move;
+        transition: transform 0.2s;
+    }
+    .kanban-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .kanban-card.overdue {
+        border-left: 4px solid #dc3545;
+    }
+    .status-new { border-left: 4px solid #0d6efd; }
+    .status-in-progress { border-left: 4px solid #ffc107; }
+    .status-repaired { border-left: 4px solid #198754; }
+    .status-scrap { border-left: 4px solid #6c757d; }
+    .dragging {
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-kanban"></i> Maintenance Request Kanban Board</h1>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#requestModal" onclick="openRequestModal()">
+                <i class="bi bi-plus-circle"></i> Create Request
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="kanban-column" data-status="New" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h5 class="text-primary mb-3">New <span class="badge bg-primary" id="count-new">0</span></h5>
+            <div id="column-new"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kanban-column" data-status="In Progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h5 class="text-warning mb-3">In Progress <span class="badge bg-warning" id="count-in-progress">0</span></h5>
+            <div id="column-in-progress"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kanban-column" data-status="Repaired" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h5 class="text-success mb-3">Repaired <span class="badge bg-success" id="count-repaired">0</span></h5>
+            <div id="column-repaired"></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="kanban-column" data-status="Scrap" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h5 class="text-secondary mb-3">Scrap <span class="badge bg-secondary" id="count-scrap">0</span></h5>
+            <div id="column-scrap"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Request Modal -->
+<div class="modal fade" id="requestModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="requestModalTitle">Create Maintenance Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="requestForm">
+                    <input type="hidden" id="requestId">
+                    <div class="mb-3">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="requestTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" id="requestDescription" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Equipment *</label>
+                            <select class="form-select" id="requestEquipmentId" required onchange="loadEquipmentTeam()">
+                                <option value="">Select Equipment</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Team (Auto-filled)</label>
+                            <input type="text" class="form-control" id="requestTeamName" readonly>
+                            <input type="hidden" id="requestTeamId">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Request Type *</label>
+                            <select class="form-select" id="requestType" required>
+                                <option value="Corrective">Corrective</option>
+                                <option value="Preventive">Preventive</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Technician</label>
+                            <input type="text" class="form-control" id="requestTechnician">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Scheduled Date</label>
+                            <input type="date" class="form-control" id="requestScheduledDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Duration (hours)</label>
+                            <input type="number" class="form-control" id="requestDuration" min="1">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveRequest()">Save Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/kanban.js"></script>
+{% endblock %}
+
